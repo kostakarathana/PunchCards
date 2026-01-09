@@ -78,13 +78,13 @@ export default function FeatureChange() {
       </Head>
       <main className="container">
         <button className="back-button" onClick={() => router.push('/')}>
-          ← Back to Home
+          Back to Home
         </button>
 
         <div className="form-container">
           <div className="form-header">
-            <h2>🔄 Feature Change Task Card</h2>
-            <p>
+            <h2 className="typewriter">FEATURE CHANGE TASK CARD</h2>
+            <p className="typewriter-slow">
               Safely refactor existing features with impact analysis and regression testing
             </p>
           </div>
@@ -149,7 +149,7 @@ export default function FeatureChange() {
                   className={`copy-button ${copied ? 'copied' : ''}`}
                   onClick={copyToClipboard}
                 >
-                  {copied ? '✓ Copied!' : 'Copy XML'}
+                  {copied ? 'COPIED' : 'COPY XML'}
                 </button>
                 {xmlOutput}
               </div>

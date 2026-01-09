@@ -84,13 +84,13 @@ export default function FeatureRequest() {
       </Head>
       <main className="container">
         <button className="back-button" onClick={() => router.push('/')}>
-          ← Back to Home
+          Back to Home
         </button>
 
         <div className="form-container">
           <div className="form-header">
-            <h2>✨ Feature Request Task Card</h2>
-            <p>
+            <h2 className="typewriter">FEATURE REQUEST TASK CARD</h2>
+            <p className="typewriter-slow">
               Build new features with a Skeleton-of-Thought architecture review process
             </p>
           </div>
@@ -167,7 +167,7 @@ export default function FeatureRequest() {
                   className={`copy-button ${copied ? 'copied' : ''}`}
                   onClick={copyToClipboard}
                 >
-                  {copied ? '✓ Copied!' : 'Copy XML'}
+                  {copied ? 'COPIED' : 'COPY XML'}
                 </button>
                 {xmlOutput}
               </div>

@@ -20,8 +20,8 @@ export default function Home() {
       </Head>
       <main className="container">
         <div className="header">
-          <h1>🎴 PunchCards</h1>
-          <p className="subtitle">
+          <h1 className="typewriter">PUNCHCARDS</h1>
+          <p className="subtitle typewriter-slow">
             Generate structured task cards for AI coding assistants
           </p>
         </div>
@@ -31,8 +31,7 @@ export default function Home() {
             className="card-button bug-fix"
             onClick={() => handleCardSelect('bug_fix')}
           >
-            <div className="card-icon">🐛</div>
-            <h2>Bug Fix</h2>
+            <h2>BUG FIX</h2>
             <p>
               Systematic debugging workflow with reproduction, analysis, and verification steps
             </p>
@@ -42,8 +41,7 @@ export default function Home() {
             className="card-button feature-request"
             onClick={() => handleCardSelect('feature_request')}
           >
-            <div className="card-icon">✨</div>
-            <h2>Feature Request</h2>
+            <h2>FEATURE REQUEST</h2>
             <p>
               Skeleton-of-Thought approach for building new features with architecture review
             </p>
@@ -53,8 +51,7 @@ export default function Home() {
             className="card-button feature-change"
             onClick={() => handleCardSelect('feature_change')}
           >
-            <div className="card-icon">🔄</div>
-            <h2>Feature Change</h2>
+            <h2>FEATURE CHANGE</h2>
             <p>
               Safe refactoring workflow with impact analysis and regression testing
             </p>

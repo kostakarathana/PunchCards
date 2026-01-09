@@ -8,70 +8,100 @@ html,
 body {
   max-width: 100vw;
   overflow-x: hidden;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
-    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
-    sans-serif;
+  font-family: 'Courier New', 'Courier', monospace;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
 body {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: #000000;
   min-height: 100vh;
-  color: #333;
+  color: #ffffff;
 }
 
-.container {
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: 2rem;
-  min-height: 100vh;
+@keyframes typewriter {
+  from {
+    width: 0;
+  }
+  to {
+    width: 100%;
+  }
 }
 
 .header {
   text-align: center;
   margin-bottom: 3rem;
-  color: white;
+  color: #ffffff;
 }
 
 .header h1 {
-  font-size: 3.5rem;
+  font-size: 3rem;
   margin-bottom: 0.5rem;
-  font-weight: 700;
+  font-weight: 400;
+  letter-spacing: 2px;
 }
 
 .subtitle {
-  font-size: 1.25rem;
-  opacity: 0.95;
+  font-size: 1rem;
+  opacity: 0.8;
+  letter-spacing: 1px;
+} white-space: nowrap;
+  animation: typewriter 2s steps(40) 1s 1 normal both;
 }
 
-.card-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-  gap: 2rem;
-  margin-bottom: 3rem;
-}
-
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
 .card-button {
-  background: white;
-  border: none;
-  border-radius: 1rem;
+  background: #000000;
+  border: 2px solid #ffffff;
+  border-radius: 0;
   padding: 2rem;
   cursor: pointer;
-  transition: all 0.3s ease;
-  text-align: center;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+  transition: all 0.2s ease;
+  text-align: left;
+  box-shadow: none;
 }
 
 .card-button:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 15px 40px rgba(0, 0, 0, 0.3);
+  background: #ffffff;
+  color: #000000;
 }
 
 .card-button:active {
-  transform: translateY(-2px);
+  transform: scale(0.98);
 }
 
+.card-icon {
+  display: none;
+}
+
+.card-button h2 {
+  font-size: 1.5rem;
+  margin-bottom: 0.75rem;
+  color: inherit;
+  font-weight: 400;
+  letter-spacing: 1px;
+}
+
+.card-button p {
+  font-size: 0.85rem;
+  color: inherit;
+  line-height: 1.6;
+  opacity: 0.8;
+}
+
+.bug-fix:hover {
+  border: 2px solid #ffffff;
+}
+
+.feature-request:hover {
+  border: 2px solid #ffffff;
+}
+
+.feature-change:hover {
+  border: 2px solid #ffffff;
+}
 .card-icon {
   font-size: 3rem;
   margin-bottom: 1rem;
@@ -97,26 +127,23 @@ body {
   border: 3px solid #8b5cf6;
 }
 
-.feature-change:hover {
-  border: 3px solid #3b82f6;
-}
-
 .footer {
   text-align: center;
-  color: white;
-  opacity: 0.9;
+  color: #ffffff;
+  opacity: 0.7;
 }
 
 .footer p {
-  font-size: 1rem;
+  font-size: 0.9rem;
+  letter-spacing: 0.5px;
 }
-
 /* Form styles */
 .form-container {
-  background: white;
-  border-radius: 1rem;
+  background: #000000;
+  border: 2px solid #ffffff;
+  border-radius: 0;
   padding: 2.5rem;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+  box-shadow: none;
   max-width: 800px;
   margin: 0 auto;
 }
@@ -126,48 +153,65 @@ body {
 }
 
 .form-header h2 {
-  font-size: 2rem;
+  font-size: 1.75rem;
   margin-bottom: 0.5rem;
-  color: #333;
+  color: #ffffff;
+  font-weight: 400;
+  letter-spacing: 1px;
 }
 
 .form-header p {
-  color: #666;
-  font-size: 0.95rem;
-}
-
+  color: #ffffff;
 .back-button {
   display: inline-flex;
   align-items: center;
   gap: 0.5rem;
-  background: #f3f4f6;
-  border: none;
+  background: #000000;
+  border: 2px solid #ffffff;
+  color: #ffffff;
   padding: 0.75rem 1.25rem;
-  border-radius: 0.5rem;
+  border-radius: 0;
   cursor: pointer;
-  font-size: 0.95rem;
+  font-size: 0.85rem;
   margin-bottom: 2rem;
-  transition: background 0.2s ease;
+  transition: all 0.2s ease;
+  font-family: 'Courier New', 'Courier', monospace;
+  letter-spacing: 0.5px;
 }
 
 .back-button:hover {
-  background: #e5e7eb;
-}
-
-.form-group {
-  margin-bottom: 1.5rem;
-}
-
+  background: #ffffff;
+  color: #000000;
+} padding: 0.75rem 1.25rem;
+  border-radius: 0.5rem;
 .form-group label {
   display: block;
-  font-weight: 600;
+  font-weight: 400;
   margin-bottom: 0.5rem;
-  color: #333;
-  font-size: 0.95rem;
+  color: #ffffff;
+  font-size: 0.85rem;
+  letter-spacing: 0.5px;
 }
 
 .form-group input,
 .form-group textarea {
+  width: 100%;
+  padding: 0.75rem;
+  border: 1px solid #ffffff;
+  border-radius: 0;
+  font-size: 0.85rem;
+  font-family: 'Courier New', 'Courier', monospace;
+  transition: all 0.2s ease;
+  background: #000000;
+  color: #ffffff;
+}
+
+.form-group input:focus,
+.form-group textarea:focus {
+  outline: none;
+  border-color: #ffffff;
+  border-width: 2px;
+}form-group textarea {
   width: 100%;
   padding: 0.75rem;
   border: 2px solid #e5e7eb;
@@ -176,61 +220,46 @@ body {
   font-family: inherit;
   transition: border-color 0.2s ease;
 }
-
-.form-group input:focus,
-.form-group textarea:focus {
-  outline: none;
-  border-color: #667eea;
-}
-
-.form-group textarea {
-  min-height: 100px;
-  resize: vertical;
-}
-
-.form-actions {
-  display: flex;
-  gap: 1rem;
-  margin-top: 2rem;
-}
-
 .btn {
   flex: 1;
   padding: 1rem;
-  border: none;
-  border-radius: 0.5rem;
-  font-size: 1rem;
-  font-weight: 600;
+  border: 2px solid #ffffff;
+  border-radius: 0;
+  font-size: 0.85rem;
+  font-weight: 400;
   cursor: pointer;
   transition: all 0.2s ease;
+  font-family: 'Courier New', 'Courier', monospace;
+  letter-spacing: 1px;
 }
 
 .btn-primary {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  color: white;
+  background: #ffffff;
+  color: #000000;
 }
 
 .btn-primary:hover {
-  opacity: 0.9;
-  transform: translateY(-2px);
+  background: #000000;
+  color: #ffffff;
 }
 
 .btn-secondary {
-  background: #f3f4f6;
-  color: #333;
+  background: #000000;
+  color: #ffffff;
 }
 
 .btn-secondary:hover {
-  background: #e5e7eb;
+  background: #ffffff;
+  color: #000000;
 }
-
 .xml-output {
-  background: #1e293b;
-  color: #e2e8f0;
+  background: #000000;
+  color: #ffffff;
   padding: 1.5rem;
-  border-radius: 0.5rem;
-  font-family: 'Courier New', monospace;
-  font-size: 0.9rem;
+  border: 1px solid #ffffff;
+  border-radius: 0;
+  font-family: 'Courier New', 'Courier', monospace;
+  font-size: 0.8rem;
   overflow-x: auto;
   margin-top: 2rem;
   position: relative;
@@ -242,13 +271,39 @@ body {
   position: absolute;
   top: 1rem;
   right: 1rem;
-  background: #667eea;
-  color: white;
-  border: none;
+  background: #ffffff;
+  color: #000000;
+  border: 1px solid #ffffff;
   padding: 0.5rem 1rem;
-  border-radius: 0.375rem;
+  border-radius: 0;
   cursor: pointer;
-  font-size: 0.875rem;
+  font-size: 0.75rem;
+  transition: all 0.2s ease;
+  font-family: 'Courier New', 'Courier', monospace;
+  letter-spacing: 0.5px;
+}
+
+.copy-button:hover {
+  background: #000000;
+  color: #ffffff;
+}
+
+.copy-button.copied {
+  background: #000000;
+  color: #ffffff;
+}
+
+.success-message {
+  background: #000000;
+  color: #ffffff;
+  padding: 1rem;
+  border: 1px solid #ffffff;
+  border-radius: 0;
+  margin-top: 1rem;
+  text-align: center;
+  font-size: 0.85rem;
+  letter-spacing: 0.5px;
+} font-size: 0.875rem;
   transition: background 0.2s ease;
 }
 
