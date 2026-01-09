@@ -28,6 +28,32 @@ body {
   }
 }
 
+@keyframes blink {
+  50% {
+    border-color: transparent;
+  }
+}
+
+.typewriter {
+  overflow: hidden;
+  white-space: nowrap;
+  border-right: 2px solid #ffffff;
+  animation: typewriter 1.5s steps(40) 1s 1 normal both, blink 0.75s step-end infinite;
+}
+
+.typewriter-slow {
+  overflow: hidden;
+  white-space: nowrap;
+  animation: typewriter 2s steps(40) 1s 1 normal both;
+}
+
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 2rem;
+  min-height: 100vh;
+}
+
 .header {
   text-align: center;
   margin-bottom: 3rem;
@@ -45,13 +71,15 @@ body {
   font-size: 1rem;
   opacity: 0.8;
   letter-spacing: 1px;
-} white-space: nowrap;
-  animation: typewriter 2s steps(40) 1s 1 normal both;
 }
 
-.container {
-  max-width: 1200px;
-  margin: 0 auto;
+.card-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 2rem;
+  margin-bottom: 3rem;
+}
+
 .card-button {
   background: #000000;
   border: 2px solid #ffffff;
@@ -102,30 +130,6 @@ body {
 .feature-change:hover {
   border: 2px solid #ffffff;
 }
-.card-icon {
-  font-size: 3rem;
-  margin-bottom: 1rem;
-}
-
-.card-button h2 {
-  font-size: 1.5rem;
-  margin-bottom: 0.75rem;
-  color: #333;
-}
-
-.card-button p {
-  font-size: 0.95rem;
-  color: #666;
-  line-height: 1.5;
-}
-
-.bug-fix:hover {
-  border: 3px solid #ef4444;
-}
-
-.feature-request:hover {
-  border: 3px solid #8b5cf6;
-}
 
 .footer {
   text-align: center;
@@ -137,6 +141,7 @@ body {
   font-size: 0.9rem;
   letter-spacing: 0.5px;
 }
+
 /* Form styles */
 .form-container {
   background: #000000;
@@ -162,6 +167,11 @@ body {
 
 .form-header p {
   color: #ffffff;
+  font-size: 0.85rem;
+  opacity: 0.7;
+  letter-spacing: 0.5px;
+}
+
 .back-button {
   display: inline-flex;
   align-items: center;
@@ -182,8 +192,12 @@ body {
 .back-button:hover {
   background: #ffffff;
   color: #000000;
-} padding: 0.75rem 1.25rem;
-  border-radius: 0.5rem;
+}
+
+.form-group {
+  margin-bottom: 1.5rem;
+}
+
 .form-group label {
   display: block;
   font-weight: 400;
@@ -211,15 +225,19 @@ body {
   outline: none;
   border-color: #ffffff;
   border-width: 2px;
-}form-group textarea {
-  width: 100%;
-  padding: 0.75rem;
-  border: 2px solid #e5e7eb;
-  border-radius: 0.5rem;
-  font-size: 0.95rem;
-  font-family: inherit;
-  transition: border-color 0.2s ease;
 }
+
+.form-group textarea {
+  min-height: 100px;
+  resize: vertical;
+}
+
+.form-actions {
+  display: flex;
+  gap: 1rem;
+  margin-top: 2rem;
+}
+
 .btn {
   flex: 1;
   padding: 1rem;
@@ -252,6 +270,7 @@ body {
   background: #ffffff;
   color: #000000;
 }
+
 .xml-output {
   background: #000000;
   color: #ffffff;
@@ -303,30 +322,11 @@ body {
   text-align: center;
   font-size: 0.85rem;
   letter-spacing: 0.5px;
-} font-size: 0.875rem;
-  transition: background 0.2s ease;
-}
-
-.copy-button:hover {
-  background: #5568d3;
-}
-
-.copy-button.copied {
-  background: #10b981;
-}
-
-.success-message {
-  background: #d1fae5;
-  color: #065f46;
-  padding: 1rem;
-  border-radius: 0.5rem;
-  margin-top: 1rem;
-  text-align: center;
 }
 
 @media (max-width: 768px) {
   .header h1 {
-    font-size: 2.5rem;
+    font-size: 2rem;
   }
   
   .card-grid {
