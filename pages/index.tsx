@@ -1,8 +1,7 @@
-import { useState } from 'react'
 import { useRouter } from 'next/router'
 import Head from 'next/head'
 
-type CardType = 'bug_fix' | 'feature_request' | 'feature_change'
+type CardType = 'bug_fix' | 'feature_request' | 'feature_change' | 'documentation' | 'testing' | 'security_audit' | 'cleanup'
 
 export default function Home() {
   const router = useRouter()
@@ -54,6 +53,46 @@ export default function Home() {
             <h2>FEATURE CHANGE</h2>
             <p>
               Safe refactoring workflow with impact analysis and regression testing
+            </p>
+          </button>
+
+          <button
+            className="card-button documentation"
+            onClick={() => handleCardSelect('documentation')}
+          >
+            <h2>DOCUMENTATION</h2>
+            <p>
+              Comprehensive docs generation with API reference, examples, and formatting options
+            </p>
+          </button>
+
+          <button
+            className="card-button testing"
+            onClick={() => handleCardSelect('testing')}
+          >
+            <h2>TESTING</h2>
+            <p>
+              Test suite creation with unit, integration, E2E tests and coverage configuration
+            </p>
+          </button>
+
+          <button
+            className="card-button security-audit"
+            onClick={() => handleCardSelect('security_audit')}
+          >
+            <h2>SECURITY AUDIT</h2>
+            <p>
+              Security review with OWASP checks, vulnerability scanning, and compliance validation
+            </p>
+          </button>
+
+          <button
+            className="card-button cleanup"
+            onClick={() => handleCardSelect('cleanup')}
+          >
+            <h2>CLEANUP</h2>
+            <p>
+              Code cleanup with dead code removal, formatting, dependency and structure fixes
             </p>
           </button>
         </div>
