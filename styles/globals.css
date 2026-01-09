@@ -89,6 +89,7 @@ body {
   transition: all 0.2s ease;
   text-align: left;
   box-shadow: none;
+  color: #ffffff;
 }
 
 .card-button:hover {
