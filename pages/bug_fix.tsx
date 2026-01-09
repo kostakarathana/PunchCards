@@ -6,6 +6,14 @@ interface BugFixData {
   observedBehavior: string
   expectedBehavior: string
   stepsToReproduce: string
+  errorMessages: string
+  affectedFiles: string
+  environment: string
+  urgency: number
+  testingLevel: number
+  creativityLevel: number
+  filesToIgnore: string
+  extraInfo: string
 }
 
 export default function BugFix() {
@@ -14,6 +22,14 @@ export default function BugFix() {
     observedBehavior: '',
     expectedBehavior: '',
     stepsToReproduce: '',
+    errorMessages: '',
+    affectedFiles: '',
+    environment: '',
+    urgency: 3,
+    testingLevel: 3,
+    creativityLevel: 2,
+    filesToIgnore: '',
+    extraInfo: '',
   })
   const [xmlOutput, setXmlOutput] = useState('')
   const [copied, setCopied] = useState(false)
@@ -23,6 +39,25 @@ export default function BugFix() {
   ) => {
     const { name, value } = e.target
     setFormData((prev) => ({ ...prev, [name]: value }))
+  }
+
+  const handleRatingChange = (field: string, value: number) => {
+    setFormData((prev) => ({ ...prev, [field]: value }))
+  }
+
+  const getUrgencyLabel = (val: number) => {
+    const labels = ['Low - whenever', 'Minor - soon', 'Normal', 'High - ASAP', 'Critical - NOW']
+    return labels[val - 1]
+  }
+
+  const getTestingLabel = (val: number) => {
+    const labels = ['Minimal - just verify fix', 'Light - basic tests', 'Standard', 'Thorough - edge cases', 'Exhaustive - full coverage']
+    return labels[val - 1]
+  }
+
+  const getCreativityLabel = (val: number) => {
+    const labels = ['Conservative - safest fix', 'Cautious', 'Balanced', 'Open to ideas', 'Creative - explore options']
+    return labels[val - 1]
   }
 
   const generateXML = () => {
@@ -47,7 +82,28 @@ export default function BugFix() {
         <steps_to_reproduce>
             ${formData.stepsToReproduce}
         </steps_to_reproduce>
+        <error_messages>
+            ${formData.errorMessages || 'N/A'}
+        </error_messages>
+        <affected_files>
+            ${formData.affectedFiles || 'Unknown - please investigate'}
+        </affected_files>
+        <environment>
+            ${formData.environment || 'Not specified'}
+        </environment>
     </bug_details>
+
+    <preferences>
+        <urgency level="${formData.urgency}">${getUrgencyLabel(formData.urgency)}</urgency>
+        <testing_level level="${formData.testingLevel}">${getTestingLabel(formData.testingLevel)}</testing_level>
+        <creativity_level level="${formData.creativityLevel}">${getCreativityLabel(formData.creativityLevel)}</creativity_level>
+        <files_to_ignore>
+            ${formData.filesToIgnore || 'None'}
+        </files_to_ignore>
+        <extra_info>
+            ${formData.extraInfo || 'None'}
+        </extra_info>
+    </preferences>
 </task_card>`
     setXmlOutput(xml)
   }
@@ -67,6 +123,14 @@ export default function BugFix() {
       observedBehavior: '',
       expectedBehavior: '',
       stepsToReproduce: '',
+      errorMessages: '',
+      affectedFiles: '',
+      environment: '',
+      urgency: 3,
+      testingLevel: 3,
+      creativityLevel: 2,
+      filesToIgnore: '',
+      extraInfo: '',
     })
     setXmlOutput('')
     setCopied(false)
@@ -91,46 +155,159 @@ export default function BugFix() {
           </div>
 
           <form onSubmit={(e) => { e.preventDefault(); generateXML() }}>
-            <div className="form-group">
-              <label htmlFor="observedBehavior">
-                Observed Behavior *
-              </label>
-              <textarea
-                id="observedBehavior"
-                name="observedBehavior"
-                value={formData.observedBehavior}
-                onChange={handleInputChange}
-                placeholder="Describe what's currently happening (the bug)..."
-                required
-              />
+            <div className="form-section">
+              <h3>Core Details</h3>
+              
+              <div className="form-group">
+                <label htmlFor="observedBehavior">Observed Behavior *</label>
+                <textarea
+                  id="observedBehavior"
+                  name="observedBehavior"
+                  value={formData.observedBehavior}
+                  onChange={handleInputChange}
+                  placeholder="Describe what's currently happening (the bug)..."
+                  required
+                />
+              </div>
+
+              <div className="form-group">
+                <label htmlFor="expectedBehavior">Expected Behavior *</label>
+                <textarea
+                  id="expectedBehavior"
+                  name="expectedBehavior"
+                  value={formData.expectedBehavior}
+                  onChange={handleInputChange}
+                  placeholder="Describe what should happen instead..."
+                  required
+                />
+              </div>
+
+              <div className="form-group">
+                <label htmlFor="stepsToReproduce">Steps to Reproduce *</label>
+                <textarea
+                  id="stepsToReproduce"
+                  name="stepsToReproduce"
+                  value={formData.stepsToReproduce}
+                  onChange={handleInputChange}
+                  placeholder="1. Go to...&#10;2. Click on...&#10;3. See error..."
+                  required
+                />
+              </div>
             </div>
 
-            <div className="form-group">
-              <label htmlFor="expectedBehavior">
-                Expected Behavior *
-              </label>
-              <textarea
-                id="expectedBehavior"
-                name="expectedBehavior"
-                value={formData.expectedBehavior}
-                onChange={handleInputChange}
-                placeholder="Describe what should happen instead..."
-                required
-              />
+            <div className="form-section">
+              <h3>Additional Context</h3>
+
+              <div className="form-group">
+                <label htmlFor="errorMessages">Error Messages / Stack Trace</label>
+                <textarea
+                  id="errorMessages"
+                  name="errorMessages"
+                  value={formData.errorMessages}
+                  onChange={handleInputChange}
+                  placeholder="Paste any error messages or stack traces here..."
+                />
+              </div>
+
+              <div className="form-group">
+                <label htmlFor="affectedFiles">Affected Files</label>
+                <textarea
+                  id="affectedFiles"
+                  name="affectedFiles"
+                  value={formData.affectedFiles}
+                  onChange={handleInputChange}
+                  placeholder="List files you suspect are involved (if known)..."
+                />
+              </div>
+
+              <div className="form-group">
+                <label htmlFor="environment">Environment</label>
+                <input
+                  type="text"
+                  id="environment"
+                  name="environment"
+                  value={formData.environment}
+                  onChange={handleInputChange}
+                  placeholder="e.g., Node 18, Chrome, macOS, Production..."
+                />
+              </div>
             </div>
 
-            <div className="form-group">
-              <label htmlFor="stepsToReproduce">
-                Steps to Reproduce *
-              </label>
-              <textarea
-                id="stepsToReproduce"
-                name="stepsToReproduce"
-                value={formData.stepsToReproduce}
-                onChange={handleInputChange}
-                placeholder="1. Go to...&#10;2. Click on...&#10;3. See error..."
-                required
-              />
+            <div className="form-section">
+              <h3>Preferences</h3>
+
+              <div className="form-group">
+                <label>Urgency Level</label>
+                <div className="rating-buttons">
+                  {[1, 2, 3, 4, 5].map((val) => (
+                    <button
+                      key={val}
+                      type="button"
+                      className={`rating-btn ${formData.urgency === val ? 'active' : ''}`}
+                      onClick={() => handleRatingChange('urgency', val)}
+                    >
+                      {val}
+                    </button>
+                  ))}
+                </div>
+                <span className="rating-label">{getUrgencyLabel(formData.urgency)}</span>
+              </div>
+
+              <div className="form-group">
+                <label>Testing Level</label>
+                <div className="rating-buttons">
+                  {[1, 2, 3, 4, 5].map((val) => (
+                    <button
+                      key={val}
+                      type="button"
+                      className={`rating-btn ${formData.testingLevel === val ? 'active' : ''}`}
+                      onClick={() => handleRatingChange('testingLevel', val)}
+                    >
+                      {val}
+                    </button>
+                  ))}
+                </div>
+                <span className="rating-label">{getTestingLabel(formData.testingLevel)}</span>
+              </div>
+
+              <div className="form-group">
+                <label>Creativity Level</label>
+                <div className="rating-buttons">
+                  {[1, 2, 3, 4, 5].map((val) => (
+                    <button
+                      key={val}
+                      type="button"
+                      className={`rating-btn ${formData.creativityLevel === val ? 'active' : ''}`}
+                      onClick={() => handleRatingChange('creativityLevel', val)}
+                    >
+                      {val}
+                    </button>
+                  ))}
+                </div>
+                <span className="rating-label">{getCreativityLabel(formData.creativityLevel)}</span>
+              </div>
+
+              <div className="form-group">
+                <label htmlFor="filesToIgnore">Files/Folders to Ignore</label>
+                <textarea
+                  id="filesToIgnore"
+                  name="filesToIgnore"
+                  value={formData.filesToIgnore}
+                  onChange={handleInputChange}
+                  placeholder="List any files or folders that should NOT be modified..."
+                />
+              </div>
+
+              <div className="form-group">
+                <label htmlFor="extraInfo">Extra Info / Notes</label>
+                <textarea
+                  id="extraInfo"
+                  name="extraInfo"
+                  value={formData.extraInfo}
+                  onChange={handleInputChange}
+                  placeholder="Any additional context, previous attempts, hunches..."
+                />
+              </div>
             </div>
 
             <div className="form-actions">
