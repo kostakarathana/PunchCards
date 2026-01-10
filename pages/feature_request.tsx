@@ -5,6 +5,7 @@ import Head from 'next/head'
 interface FeatureRequestData {
   // Punchcard Meta
   punchcardTitle: string
+  enableDocumentation: boolean
   documentationDepth: number
   // Core
   goal: string
@@ -61,6 +62,7 @@ interface FeatureRequestData {
 
 const defaultFormData: FeatureRequestData = {
   punchcardTitle: '',
+  enableDocumentation: true,
   documentationDepth: 3,
   goal: '',
   userStory: '',
@@ -173,16 +175,7 @@ export default function FeatureRequest() {
   }
 
   const generateXML = () => {
-    const xml = `<task_card type="feature_request" title="${formData.punchcardTitle || 'Untitled Feature Request'}">
-  <meta_instruction>
-    Adopt a "Skeleton-of-Thought" approach:
-    0. CONTEXT STUDY: Review the existing project structure, design patterns, and utility libraries. Ensure new additions align with established coding conventions.
-    1. ARCHITECTURE: Summarize the files you need to create or modify based on your study.
-    2. CONTRACTS: Write the Interfaces, Types, or DB Schemas FIRST.
-    3. STOP: Ask for my approval on the interfaces before writing logic.
-    4. IMPLEMENT: Once approved, write the implementation logic.
-  </meta_instruction>
-
+    const documentationBlock = formData.enableDocumentation ? `
   <documentation_requirement>
     <instruction>After completing this task, create a markdown file documenting the work done.</instruction>
     <output_path>punchcards/${sanitizeFilename(formData.punchcardTitle)}.md</output_path>
@@ -195,7 +188,18 @@ export default function FeatureRequest() {
       Level 5: Above + full context, alternative approaches considered, future considerations
     </format>
   </documentation_requirement>
+` : ''
 
+    const xml = `<task_card type="feature_request" title="${formData.punchcardTitle || 'Untitled Feature Request'}">
+  <meta_instruction>
+    Adopt a "Skeleton-of-Thought" approach:
+    0. CONTEXT STUDY: Review the existing project structure, design patterns, and utility libraries. Ensure new additions align with established coding conventions.
+    1. ARCHITECTURE: Summarize the files you need to create or modify based on your study.
+    2. CONTRACTS: Write the Interfaces, Types, or DB Schemas FIRST.
+    3. STOP: Ask for my approval on the interfaces before writing logic.
+    4. IMPLEMENT: Once approved, write the implementation logic.
+  </meta_instruction>
+${documentationBlock}
   <feature_details>
     <goal>${formData.goal}</goal>
     <user_story>${formData.userStory}</user_story>
@@ -600,19 +604,27 @@ export default function FeatureRequest() {
               )}
             </div>
 
-            {/* DOCUMENTATION DEPTH */}
+            {/* DOCUMENTATION */}
             <div className="form-section documentation-depth-section">
               <h3>Documentation</h3>
               <div className="form-group">
-                <label>Documentation Depth</label>
-                <div className="rating-buttons">
-                  {[1, 2, 3, 4, 5].map((val) => (
-                    <button key={val} type="button" className={`rating-btn ${formData.documentationDepth === val ? 'active' : ''}`} onClick={() => handleRatingChange('documentationDepth', val)}>{val}</button>
-                  ))}
-                </div>
-                <span className="rating-label">{getDocDepthLabel(formData.documentationDepth)}</span>
-                <span className="field-hint">How detailed should the punchcard documentation be?</span>
+                <label className="checkbox-label">
+                  <input type="checkbox" name="enableDocumentation" checked={formData.enableDocumentation} onChange={handleCheckboxChange} />
+                  <span>Generate punchcard documentation</span>
+                </label>
+                <span className="field-hint">Creates a markdown file in punchcards/ folder documenting this task</span>
               </div>
+              {formData.enableDocumentation && (
+                <div className="form-group">
+                  <label>Documentation Depth</label>
+                  <div className="rating-buttons">
+                    {[1, 2, 3, 4, 5].map((val) => (
+                      <button key={val} type="button" className={`rating-btn ${formData.documentationDepth === val ? 'active' : ''}`} onClick={() => handleRatingChange('documentationDepth', val)}>{val}</button>
+                    ))}
+                  </div>
+                  <span className="rating-label">{getDocDepthLabel(formData.documentationDepth)}</span>
+                </div>
+              )}
             </div>
 
             <div className="form-actions">

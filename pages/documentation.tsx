@@ -5,6 +5,7 @@ import Head from 'next/head'
 interface DocumentationData {
   // Punchcard Meta
   punchcardTitle: string
+  enableDocumentation: boolean
   documentationDepth: number
   // Core
   targetCode: string
@@ -60,6 +61,7 @@ interface DocumentationData {
 
 const defaultFormData: DocumentationData = {
   punchcardTitle: '',
+  enableDocumentation: true,
   documentationDepth: 3,
   targetCode: '',
   documentationType: '',
@@ -171,17 +173,7 @@ export default function Documentation() {
   }
 
   const generateXML = () => {
-    const xml = `<task_card type="documentation" title="${formData.punchcardTitle || 'Untitled Documentation'}">
-  <meta_instruction>
-    Follow this documentation workflow:
-    0. CONTEXT STUDY: Review the target code thoroughly. Understand its purpose, inputs, outputs, and edge cases.
-    1. OUTLINE: Create a documentation structure outline based on the documentation type requested.
-    2. DRAFT: Write the documentation following the style guide and detail level specified.
-    3. EXAMPLES: Add code examples that demonstrate usage patterns.
-    4. REVIEW: Check for accuracy, completeness, and clarity.
-    5. FORMAT: Apply proper formatting, links, and cross-references.
-  </meta_instruction>
-
+    const documentationBlock = formData.enableDocumentation ? `
   <punchcard_documentation_requirement>
     <instruction>After completing this task, create a markdown file documenting the work done.</instruction>
     <output_path>punchcards/${sanitizeFilename(formData.punchcardTitle)}.md</output_path>
@@ -194,7 +186,19 @@ export default function Documentation() {
       Level 5: Above + full context, alternative approaches considered, future considerations
     </format>
   </punchcard_documentation_requirement>
+` : ''
 
+    const xml = `<task_card type="documentation" title="${formData.punchcardTitle || 'Untitled Documentation'}">
+  <meta_instruction>
+    Follow this documentation workflow:
+    0. CONTEXT STUDY: Review the target code thoroughly. Understand its purpose, inputs, outputs, and edge cases.
+    1. OUTLINE: Create a documentation structure outline based on the documentation type requested.
+    2. DRAFT: Write the documentation following the style guide and detail level specified.
+    3. EXAMPLES: Add code examples that demonstrate usage patterns.
+    4. REVIEW: Check for accuracy, completeness, and clarity.
+    5. FORMAT: Apply proper formatting, links, and cross-references.
+  </meta_instruction>
+${documentationBlock}
   <documentation_details>
     <target_code>${formData.targetCode}</target_code>
     <documentation_type>${formData.documentationType}</documentation_type>
@@ -621,19 +625,27 @@ export default function Documentation() {
               )}
             </div>
 
-            {/* DOCUMENTATION DEPTH */}
+            {/* PUNCHCARD DOCUMENTATION */}
             <div className="form-section documentation-depth-section">
               <h3>Punchcard Documentation</h3>
               <div className="form-group">
-                <label>Documentation Depth</label>
-                <div className="rating-buttons">
-                  {[1, 2, 3, 4, 5].map((val) => (
-                    <button key={val} type="button" className={`rating-btn ${formData.documentationDepth === val ? 'active' : ''}`} onClick={() => handleRatingChange('documentationDepth', val)}>{val}</button>
-                  ))}
-                </div>
-                <span className="rating-label">{getDocDepthLabel(formData.documentationDepth)}</span>
-                <span className="field-hint">How detailed should the punchcard documentation be?</span>
+                <label className="checkbox-label">
+                  <input type="checkbox" name="enableDocumentation" checked={formData.enableDocumentation} onChange={handleCheckboxChange} />
+                  <span>Generate punchcard documentation</span>
+                </label>
+                <span className="field-hint">Creates a markdown file in punchcards/ folder documenting this task</span>
               </div>
+              {formData.enableDocumentation && (
+                <div className="form-group">
+                  <label>Documentation Depth</label>
+                  <div className="rating-buttons">
+                    {[1, 2, 3, 4, 5].map((val) => (
+                      <button key={val} type="button" className={`rating-btn ${formData.documentationDepth === val ? 'active' : ''}`} onClick={() => handleRatingChange('documentationDepth', val)}>{val}</button>
+                    ))}
+                  </div>
+                  <span className="rating-label">{getDocDepthLabel(formData.documentationDepth)}</span>
+                </div>
+              )}
             </div>
 
             <div className="form-actions">

@@ -5,6 +5,7 @@ import Head from 'next/head'
 interface TestingData {
   // Punchcard Meta
   punchcardTitle: string
+  enableDocumentation: boolean
   documentationDepth: number
   // Core
   targetCode: string
@@ -60,6 +61,7 @@ interface TestingData {
 
 const defaultFormData: TestingData = {
   punchcardTitle: '',
+  enableDocumentation: true,
   documentationDepth: 3,
   targetCode: '',
   testingGoal: '',
@@ -171,17 +173,7 @@ export default function Testing() {
   }
 
   const generateXML = () => {
-    const xml = `<task_card type="testing" title="${formData.punchcardTitle || 'Untitled Testing'}">
-  <meta_instruction>
-    Follow this testing workflow:
-    0. ANALYSIS: Understand the code to be tested. Identify functions, classes, edge cases, and dependencies.
-    1. STRATEGY: Plan the testing approach based on the test types requested.
-    2. SETUP: Configure test environment, mocks, and fixtures as needed.
-    3. WRITE TESTS: Create tests following the specified patterns and conventions.
-    4. VERIFY: Ensure tests pass and provide meaningful coverage.
-    5. DOCUMENT: Add clear test descriptions and comments where helpful.
-  </meta_instruction>
-
+    const documentationBlock = formData.enableDocumentation ? `
   <documentation_requirement>
     <instruction>After completing this task, create a markdown file documenting the work done.</instruction>
     <output_path>punchcards/${sanitizeFilename(formData.punchcardTitle)}.md</output_path>
@@ -194,7 +186,19 @@ export default function Testing() {
       Level 5: Above + full context, alternative approaches considered, future considerations
     </format>
   </documentation_requirement>
+` : ''
 
+    const xml = `<task_card type="testing" title="${formData.punchcardTitle || 'Untitled Testing'}">
+  <meta_instruction>
+    Follow this testing workflow:
+    0. ANALYSIS: Understand the code to be tested. Identify functions, classes, edge cases, and dependencies.
+    1. STRATEGY: Plan the testing approach based on the test types requested.
+    2. SETUP: Configure test environment, mocks, and fixtures as needed.
+    3. WRITE TESTS: Create tests following the specified patterns and conventions.
+    4. VERIFY: Ensure tests pass and provide meaningful coverage.
+    5. DOCUMENT: Add clear test descriptions and comments where helpful.
+  </meta_instruction>
+${documentationBlock}
   <testing_details>
     <target_code>${formData.targetCode}</target_code>
     <testing_goal>${formData.testingGoal}</testing_goal>
@@ -613,19 +617,27 @@ export default function Testing() {
               )}
             </div>
 
-            {/* DOCUMENTATION DEPTH */}
+            {/* DOCUMENTATION */}
             <div className="form-section documentation-depth-section">
               <h3>Documentation</h3>
               <div className="form-group">
-                <label>Documentation Depth</label>
-                <div className="rating-buttons">
-                  {[1, 2, 3, 4, 5].map((val) => (
-                    <button key={val} type="button" className={`rating-btn ${formData.documentationDepth === val ? 'active' : ''}`} onClick={() => handleRatingChange('documentationDepth', val)}>{val}</button>
-                  ))}
-                </div>
-                <span className="rating-label">{getDocDepthLabel(formData.documentationDepth)}</span>
-                <span className="field-hint">How detailed should the punchcard documentation be?</span>
+                <label className="checkbox-label">
+                  <input type="checkbox" name="enableDocumentation" checked={formData.enableDocumentation} onChange={handleCheckboxChange} />
+                  <span>Generate punchcard documentation</span>
+                </label>
+                <span className="field-hint">Creates a markdown file in punchcards/ folder documenting this task</span>
               </div>
+              {formData.enableDocumentation && (
+                <div className="form-group">
+                  <label>Documentation Depth</label>
+                  <div className="rating-buttons">
+                    {[1, 2, 3, 4, 5].map((val) => (
+                      <button key={val} type="button" className={`rating-btn ${formData.documentationDepth === val ? 'active' : ''}`} onClick={() => handleRatingChange('documentationDepth', val)}>{val}</button>
+                    ))}
+                  </div>
+                  <span className="rating-label">{getDocDepthLabel(formData.documentationDepth)}</span>
+                </div>
+              )}
             </div>
 
             <div className="form-actions">

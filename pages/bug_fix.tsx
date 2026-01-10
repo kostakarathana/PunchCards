@@ -5,6 +5,7 @@ import Head from 'next/head'
 interface BugFixData {
   // Punchcard Meta
   punchcardTitle: string
+  enableDocumentation: boolean
   documentationDepth: number
   // Core
   observedBehavior: string
@@ -60,6 +61,7 @@ interface BugFixData {
 
 const defaultFormData: BugFixData = {
   punchcardTitle: '',
+  enableDocumentation: true,
   documentationDepth: 3,
   observedBehavior: '',
   expectedBehavior: '',
@@ -171,17 +173,7 @@ export default function BugFix() {
   }
 
   const generateXML = () => {
-    const xml = `<task_card type="bug_fix" title="${formData.punchcardTitle || 'Untitled Bug Fix'}">
-    <meta_instruction>
-        DO NOT fix the code immediately. Follow this strict process:
-        0. CONTEXT STUDY: Deeply analyze the provided codebase. Identify the files involved in the error, trace the execution flow, and understand the expected state vs actual state.
-        1. ANALYZE: Read the provided stack trace/behavior in relation to your codebase study.
-        2. REPRODUCE: Write a standalone reproduction script or test case that fails.
-        3. CONFIRM: Wait for me to run the script and confirm the failure.
-        4. FIX: Apply the fix to the codebase.
-        5. VERIFY: Run the reproduction script again to prove it passes.
-    </meta_instruction>
-
+    const documentationBlock = formData.enableDocumentation ? `
     <documentation_requirement>
         <instruction>After completing this task, create a markdown file documenting the work done.</instruction>
         <output_path>punchcards/${sanitizeFilename(formData.punchcardTitle)}.md</output_path>
@@ -194,7 +186,19 @@ export default function BugFix() {
             Level 5: Above + full context, alternative approaches considered, future considerations
         </format>
     </documentation_requirement>
+` : ''
 
+    const xml = `<task_card type="bug_fix" title="${formData.punchcardTitle || 'Untitled Bug Fix'}">
+    <meta_instruction>
+        DO NOT fix the code immediately. Follow this strict process:
+        0. CONTEXT STUDY: Deeply analyze the provided codebase. Identify the files involved in the error, trace the execution flow, and understand the expected state vs actual state.
+        1. ANALYZE: Read the provided stack trace/behavior in relation to your codebase study.
+        2. REPRODUCE: Write a standalone reproduction script or test case that fails.
+        3. CONFIRM: Wait for me to run the script and confirm the failure.
+        4. FIX: Apply the fix to the codebase.
+        5. VERIFY: Run the reproduction script again to prove it passes.
+    </meta_instruction>
+${documentationBlock}
     <bug_details>
         <observed_behavior>${formData.observedBehavior}</observed_behavior>
         <expected_behavior>${formData.expectedBehavior}</expected_behavior>
@@ -589,19 +593,27 @@ export default function BugFix() {
               )}
             </div>
 
-            {/* DOCUMENTATION DEPTH */}
+            {/* DOCUMENTATION */}
             <div className="form-section documentation-depth-section">
               <h3>Documentation</h3>
               <div className="form-group">
-                <label>Documentation Depth</label>
-                <div className="rating-buttons">
-                  {[1, 2, 3, 4, 5].map((val) => (
-                    <button key={val} type="button" className={`rating-btn ${formData.documentationDepth === val ? 'active' : ''}`} onClick={() => handleRatingChange('documentationDepth', val)}>{val}</button>
-                  ))}
-                </div>
-                <span className="rating-label">{getDocDepthLabel(formData.documentationDepth)}</span>
-                <span className="field-hint">How detailed should the punchcard documentation be?</span>
+                <label className="checkbox-label">
+                  <input type="checkbox" name="enableDocumentation" checked={formData.enableDocumentation} onChange={handleCheckboxChange} />
+                  <span>Generate punchcard documentation</span>
+                </label>
+                <span className="field-hint">Creates a markdown file in punchcards/ folder documenting this task</span>
               </div>
+              {formData.enableDocumentation && (
+                <div className="form-group">
+                  <label>Documentation Depth</label>
+                  <div className="rating-buttons">
+                    {[1, 2, 3, 4, 5].map((val) => (
+                      <button key={val} type="button" className={`rating-btn ${formData.documentationDepth === val ? 'active' : ''}`} onClick={() => handleRatingChange('documentationDepth', val)}>{val}</button>
+                    ))}
+                  </div>
+                  <span className="rating-label">{getDocDepthLabel(formData.documentationDepth)}</span>
+                </div>
+              )}
             </div>
 
             <div className="form-actions">

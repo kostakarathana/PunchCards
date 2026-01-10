@@ -5,6 +5,7 @@ import Head from 'next/head'
 interface CleanupData {
   // Punchcard Meta
   punchcardTitle: string
+  enableDocumentation: boolean
   documentationDepth: number
   // Core
   targetCode: string
@@ -60,6 +61,7 @@ interface CleanupData {
 
 const defaultFormData: CleanupData = {
   punchcardTitle: '',
+  enableDocumentation: true,
   documentationDepth: 3,
   targetCode: '',
   cleanupGoals: '',
@@ -166,17 +168,7 @@ export default function Cleanup() {
   }
 
   const generateXML = () => {
-    const xml = `<task_card type="cleanup" title="${formData.punchcardTitle || 'Untitled Cleanup'}">
-  <meta_instruction>
-    Follow this code cleanup workflow:
-    0. INVENTORY: Survey the codebase for issues matching the cleanup goals.
-    1. PRIORITIZE: Identify highest-impact cleanup opportunities.
-    2. PLAN: Create a cleanup plan that won't break functionality.
-    3. EXECUTE: Apply cleanups systematically, one category at a time.
-    4. VERIFY: Ensure no regressions were introduced.
-    5. DOCUMENT: Note any significant changes or remaining issues.
-  </meta_instruction>
-
+    const documentationBlock = formData.enableDocumentation ? `
   <documentation_requirement>
     <instruction>After completing this task, create a markdown file documenting the work done.</instruction>
     <output_path>punchcards/${sanitizeFilename(formData.punchcardTitle)}.md</output_path>
@@ -189,7 +181,19 @@ export default function Cleanup() {
       Level 5: Above + full context, alternative approaches considered, future considerations
     </format>
   </documentation_requirement>
+` : ''
 
+    const xml = `<task_card type="cleanup" title="${formData.punchcardTitle || 'Untitled Cleanup'}">
+  <meta_instruction>
+    Follow this code cleanup workflow:
+    0. INVENTORY: Survey the codebase for issues matching the cleanup goals.
+    1. PRIORITIZE: Identify highest-impact cleanup opportunities.
+    2. PLAN: Create a cleanup plan that won't break functionality.
+    3. EXECUTE: Apply cleanups systematically, one category at a time.
+    4. VERIFY: Ensure no regressions were introduced.
+    5. DOCUMENT: Note any significant changes or remaining issues.
+  </meta_instruction>
+${documentationBlock}
   <cleanup_details>
     <target_code>${formData.targetCode}</target_code>
     <cleanup_goals>${formData.cleanupGoals}</cleanup_goals>
@@ -625,19 +629,27 @@ export default function Cleanup() {
               )}
             </div>
 
-            {/* DOCUMENTATION DEPTH */}
+            {/* DOCUMENTATION */}
             <div className="form-section documentation-depth-section">
               <h3>Documentation</h3>
               <div className="form-group">
-                <label>Documentation Depth</label>
-                <div className="rating-buttons">
-                  {[1, 2, 3, 4, 5].map((val) => (
-                    <button key={val} type="button" className={`rating-btn ${formData.documentationDepth === val ? 'active' : ''}`} onClick={() => handleRatingChange('documentationDepth', val)}>{val}</button>
-                  ))}
-                </div>
-                <span className="rating-label">{getDocDepthLabel(formData.documentationDepth)}</span>
-                <span className="field-hint">How detailed should the punchcard documentation be?</span>
+                <label className="checkbox-label">
+                  <input type="checkbox" name="enableDocumentation" checked={formData.enableDocumentation} onChange={handleCheckboxChange} />
+                  <span>Generate punchcard documentation</span>
+                </label>
+                <span className="field-hint">Creates a markdown file in punchcards/ folder documenting this task</span>
               </div>
+              {formData.enableDocumentation && (
+                <div className="form-group">
+                  <label>Documentation Depth</label>
+                  <div className="rating-buttons">
+                    {[1, 2, 3, 4, 5].map((val) => (
+                      <button key={val} type="button" className={`rating-btn ${formData.documentationDepth === val ? 'active' : ''}`} onClick={() => handleRatingChange('documentationDepth', val)}>{val}</button>
+                    ))}
+                  </div>
+                  <span className="rating-label">{getDocDepthLabel(formData.documentationDepth)}</span>
+                </div>
+              )}
             </div>
 
             <div className="form-actions">

@@ -5,6 +5,7 @@ import Head from 'next/head'
 interface SecurityAuditData {
   // Punchcard Meta
   punchcardTitle: string
+  enableDocumentation: boolean
   documentationDepth: number
   // Core
   targetCode: string
@@ -60,6 +61,7 @@ interface SecurityAuditData {
 
 const defaultFormData: SecurityAuditData = {
   punchcardTitle: '',
+  enableDocumentation: true,
   documentationDepth: 3,
   targetCode: '',
   auditScope: '',
@@ -166,17 +168,7 @@ export default function SecurityAudit() {
   }
 
   const generateXML = () => {
-    const xml = `<task_card type="security_audit" title="${formData.punchcardTitle || 'Untitled Security Audit'}">
-  <meta_instruction>
-    Follow this security audit workflow:
-    0. RECONNAISSANCE: Map the codebase structure, entry points, and data flows.
-    1. THREAT MODEL: Identify potential threat vectors based on app type and data handled.
-    2. STATIC ANALYSIS: Review code for security vulnerabilities and anti-patterns.
-    3. CONFIGURATION REVIEW: Check security configurations, headers, and settings.
-    4. DEPENDENCY CHECK: Audit third-party dependencies for known vulnerabilities.
-    5. REPORT: Document findings with severity, CWE references, and remediation steps.
-  </meta_instruction>
-
+    const documentationBlock = formData.enableDocumentation ? `
   <documentation_requirement>
     <instruction>After completing this task, create a markdown file documenting the work done.</instruction>
     <output_path>punchcards/${sanitizeFilename(formData.punchcardTitle)}.md</output_path>
@@ -189,7 +181,19 @@ export default function SecurityAudit() {
       Level 5: Above + full context, alternative approaches considered, future considerations
     </format>
   </documentation_requirement>
+` : ''
 
+    const xml = `<task_card type="security_audit" title="${formData.punchcardTitle || 'Untitled Security Audit'}">
+  <meta_instruction>
+    Follow this security audit workflow:
+    0. RECONNAISSANCE: Map the codebase structure, entry points, and data flows.
+    1. THREAT MODEL: Identify potential threat vectors based on app type and data handled.
+    2. STATIC ANALYSIS: Review code for security vulnerabilities and anti-patterns.
+    3. CONFIGURATION REVIEW: Check security configurations, headers, and settings.
+    4. DEPENDENCY CHECK: Audit third-party dependencies for known vulnerabilities.
+    5. REPORT: Document findings with severity, CWE references, and remediation steps.
+  </meta_instruction>
+${documentationBlock}
   <audit_details>
     <target_code>${formData.targetCode}</target_code>
     <audit_scope>${formData.auditScope}</audit_scope>
@@ -629,19 +633,27 @@ export default function SecurityAudit() {
               )}
             </div>
 
-            {/* DOCUMENTATION DEPTH */}
+            {/* DOCUMENTATION */}
             <div className="form-section documentation-depth-section">
               <h3>Documentation</h3>
               <div className="form-group">
-                <label>Documentation Depth</label>
-                <div className="rating-buttons">
-                  {[1, 2, 3, 4, 5].map((val) => (
-                    <button key={val} type="button" className={`rating-btn ${formData.documentationDepth === val ? 'active' : ''}`} onClick={() => handleRatingChange('documentationDepth', val)}>{val}</button>
-                  ))}
-                </div>
-                <span className="rating-label">{getDocDepthLabel(formData.documentationDepth)}</span>
-                <span className="field-hint">How detailed should the punchcard documentation be?</span>
+                <label className="checkbox-label">
+                  <input type="checkbox" name="enableDocumentation" checked={formData.enableDocumentation} onChange={handleCheckboxChange} />
+                  <span>Generate punchcard documentation</span>
+                </label>
+                <span className="field-hint">Creates a markdown file in punchcards/ folder documenting this task</span>
               </div>
+              {formData.enableDocumentation && (
+                <div className="form-group">
+                  <label>Documentation Depth</label>
+                  <div className="rating-buttons">
+                    {[1, 2, 3, 4, 5].map((val) => (
+                      <button key={val} type="button" className={`rating-btn ${formData.documentationDepth === val ? 'active' : ''}`} onClick={() => handleRatingChange('documentationDepth', val)}>{val}</button>
+                    ))}
+                  </div>
+                  <span className="rating-label">{getDocDepthLabel(formData.documentationDepth)}</span>
+                </div>
+              )}
             </div>
 
             <div className="form-actions">

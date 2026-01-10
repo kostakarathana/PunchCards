@@ -5,6 +5,7 @@ import Head from 'next/head'
 interface FeatureChangeData {
   // Punchcard Meta
   punchcardTitle: string
+  enableDocumentation: boolean
   documentationDepth: number
   // Core
   targetFunctionality: string
@@ -61,6 +62,7 @@ interface FeatureChangeData {
 
 const defaultFormData: FeatureChangeData = {
   punchcardTitle: '',
+  enableDocumentation: true,
   documentationDepth: 3,
   targetFunctionality: '',
   desiredChange: '',
@@ -173,16 +175,7 @@ export default function FeatureChange() {
   }
 
   const generateXML = () => {
-    const xml = `<task_card type="feature_change" title="${formData.punchcardTitle || 'Untitled Feature Change'}">
-  <meta_instruction>
-    Perform a "Safe Refactor" workflow:
-    0. CONTEXT STUDY: Map out the dependency graph for the target functionality. Identify all upstream callers and downstream dependencies.
-    1. IMPACT ANALYSIS: List all files and functions that rely on the code I want to change.
-    2. PLAN: Explain how you will handle backward compatibility or data migration.
-    3. EXECUTE: Apply the changes.
-    4. TEST: Suggest specific regression tests to ensure old features still work.
-  </meta_instruction>
-
+    const documentationBlock = formData.enableDocumentation ? `
   <documentation_requirement>
     <instruction>After completing this task, create a markdown file documenting the work done.</instruction>
     <output_path>punchcards/${sanitizeFilename(formData.punchcardTitle)}.md</output_path>
@@ -195,7 +188,18 @@ export default function FeatureChange() {
       Level 5: Above + full context, alternative approaches considered, future considerations
     </format>
   </documentation_requirement>
+` : ''
 
+    const xml = `<task_card type="feature_change" title="${formData.punchcardTitle || 'Untitled Feature Change'}">
+  <meta_instruction>
+    Perform a "Safe Refactor" workflow:
+    0. CONTEXT STUDY: Map out the dependency graph for the target functionality. Identify all upstream callers and downstream dependencies.
+    1. IMPACT ANALYSIS: List all files and functions that rely on the code I want to change.
+    2. PLAN: Explain how you will handle backward compatibility or data migration.
+    3. EXECUTE: Apply the changes.
+    4. TEST: Suggest specific regression tests to ensure old features still work.
+  </meta_instruction>
+${documentationBlock}
   <change_details>
     <target_functionality>${formData.targetFunctionality}</target_functionality>
     <desired_change>${formData.desiredChange}</desired_change>
@@ -602,19 +606,27 @@ export default function FeatureChange() {
               )}
             </div>
 
-            {/* DOCUMENTATION DEPTH */}
+            {/* DOCUMENTATION */}
             <div className="form-section documentation-depth-section">
               <h3>Documentation</h3>
               <div className="form-group">
-                <label>Documentation Depth</label>
-                <div className="rating-buttons">
-                  {[1, 2, 3, 4, 5].map((val) => (
-                    <button key={val} type="button" className={`rating-btn ${formData.documentationDepth === val ? 'active' : ''}`} onClick={() => handleRatingChange('documentationDepth', val)}>{val}</button>
-                  ))}
-                </div>
-                <span className="rating-label">{getDocDepthLabel(formData.documentationDepth)}</span>
-                <span className="field-hint">How detailed should the punchcard documentation be?</span>
+                <label className="checkbox-label">
+                  <input type="checkbox" name="enableDocumentation" checked={formData.enableDocumentation} onChange={handleCheckboxChange} />
+                  <span>Generate punchcard documentation</span>
+                </label>
+                <span className="field-hint">Creates a markdown file in punchcards/ folder documenting this task</span>
               </div>
+              {formData.enableDocumentation && (
+                <div className="form-group">
+                  <label>Documentation Depth</label>
+                  <div className="rating-buttons">
+                    {[1, 2, 3, 4, 5].map((val) => (
+                      <button key={val} type="button" className={`rating-btn ${formData.documentationDepth === val ? 'active' : ''}`} onClick={() => handleRatingChange('documentationDepth', val)}>{val}</button>
+                    ))}
+                  </div>
+                  <span className="rating-label">{getDocDepthLabel(formData.documentationDepth)}</span>
+                </div>
+              )}
             </div>
 
             <div className="form-actions">
