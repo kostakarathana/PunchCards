@@ -3,6 +3,9 @@ import { useRouter } from 'next/router'
 import Head from 'next/head'
 
 interface TestingData {
+  // Punchcard Meta
+  punchcardTitle: string
+  documentationDepth: number
   // Core
   targetCode: string
   testingGoal: string
@@ -56,6 +59,8 @@ interface TestingData {
 }
 
 const defaultFormData: TestingData = {
+  punchcardTitle: '',
+  documentationDepth: 3,
   targetCode: '',
   testingGoal: '',
   testTypes: '',
@@ -151,8 +156,22 @@ export default function Testing() {
     return labels[val - 1]
   }
 
+  const getDocDepthLabel = (val: number) => {
+    const labels = ['Minimal - snappy dot points', 'Brief - key points only', 'Standard - balanced detail', 'Detailed - thorough coverage', 'Deep - comprehensive documentation']
+    return labels[val - 1]
+  }
+
+  const sanitizeFilename = (title: string) => {
+    return title
+      .toLowerCase()
+      .replace(/[^a-z0-9\s-]/g, '')
+      .replace(/\s+/g, '_')
+      .replace(/-+/g, '_')
+      .substring(0, 50) || 'untitled'
+  }
+
   const generateXML = () => {
-    const xml = `<task_card type="testing">
+    const xml = `<task_card type="testing" title="${formData.punchcardTitle || 'Untitled Testing'}">
   <meta_instruction>
     Follow this testing workflow:
     0. ANALYSIS: Understand the code to be tested. Identify functions, classes, edge cases, and dependencies.
@@ -162,6 +181,19 @@ export default function Testing() {
     4. VERIFY: Ensure tests pass and provide meaningful coverage.
     5. DOCUMENT: Add clear test descriptions and comments where helpful.
   </meta_instruction>
+
+  <documentation_requirement>
+    <instruction>After completing this task, create a markdown file documenting the work done.</instruction>
+    <output_path>punchcards/${sanitizeFilename(formData.punchcardTitle)}.md</output_path>
+    <detail_level level="${formData.documentationDepth}">${getDocDepthLabel(formData.documentationDepth)}</detail_level>
+    <format>
+      Level 1: Task title, one-line summary, files changed (bullet list)
+      Level 2: Above + brief problem/solution description
+      Level 3: Above + key decisions made, testing notes
+      Level 4: Above + detailed reasoning, edge cases considered, related issues
+      Level 5: Above + full context, alternative approaches considered, future considerations
+    </format>
+  </documentation_requirement>
 
   <testing_details>
     <target_code>${formData.targetCode}</target_code>
@@ -239,11 +271,12 @@ export default function Testing() {
   }
 
   const downloadXML = () => {
+    const filename = `${sanitizeFilename(formData.punchcardTitle)}_testing.xml`
     const blob = new Blob([xmlOutput], { type: 'application/xml' })
     const url = URL.createObjectURL(blob)
     const a = document.createElement('a')
     a.href = url
-    a.download = 'testing_task.xml'
+    a.download = filename
     document.body.appendChild(a)
     a.click()
     document.body.removeChild(a)
@@ -275,6 +308,15 @@ export default function Testing() {
           </div>
 
           <form onSubmit={(e) => { e.preventDefault(); generateXML() }}>
+            {/* PUNCHCARD TITLE */}
+            <div className="form-section punchcard-title-section">
+              <div className="form-group">
+                <label htmlFor="punchcardTitle">Punchcard Title *</label>
+                <input type="text" id="punchcardTitle" name="punchcardTitle" value={formData.punchcardTitle} onChange={handleInputChange} placeholder="e.g., test-auth-module, add-api-tests" required />
+                <span className="field-hint">Used for documentation filename and tracking</span>
+              </div>
+            </div>
+
             {/* CORE DETAILS */}
             <div className="form-section">
               <h3>Core Details</h3>
@@ -571,6 +613,21 @@ export default function Testing() {
               )}
             </div>
 
+            {/* DOCUMENTATION DEPTH */}
+            <div className="form-section documentation-depth-section">
+              <h3>Documentation</h3>
+              <div className="form-group">
+                <label>Documentation Depth</label>
+                <div className="rating-buttons">
+                  {[1, 2, 3, 4, 5].map((val) => (
+                    <button key={val} type="button" className={`rating-btn ${formData.documentationDepth === val ? 'active' : ''}`} onClick={() => handleRatingChange('documentationDepth', val)}>{val}</button>
+                  ))}
+                </div>
+                <span className="rating-label">{getDocDepthLabel(formData.documentationDepth)}</span>
+                <span className="field-hint">How detailed should the punchcard documentation be?</span>
+              </div>
+            </div>
+
             <div className="form-actions">
               <button type="submit" className="btn btn-primary">Generate XML</button>
               <button type="button" className="btn btn-secondary" onClick={resetForm}>Reset Form</button>
@@ -581,7 +638,7 @@ export default function Testing() {
             <div className="file-card">
               <div className="file-card-header">
                 <span className="file-icon">[ ]</span>
-                <span className="file-name">testing_task.xml</span>
+                <span className="file-name">{sanitizeFilename(formData.punchcardTitle)}_testing.xml</span>
               </div>
               <div className="file-card-actions">
                 <button className="file-btn" onClick={downloadXML}>DOWNLOAD</button>
