@@ -233,6 +233,18 @@ export default function SecurityAudit() {
     }
   }
 
+  const downloadXML = () => {
+    const blob = new Blob([xmlOutput], { type: 'application/xml' })
+    const url = URL.createObjectURL(blob)
+    const a = document.createElement('a')
+    a.href = url
+    a.download = 'security_audit_task.xml'
+    document.body.appendChild(a)
+    a.click()
+    document.body.removeChild(a)
+    URL.revokeObjectURL(url)
+  }
+
   const resetForm = () => {
     setFormData(defaultFormData)
     setXmlOutput('')
@@ -582,15 +594,19 @@ export default function SecurityAudit() {
           </form>
 
           {xmlOutput && (
-            <>
-              <div className="xml-output">
-                <button className={`copy-button ${copied ? 'copied' : ''}`} onClick={copyToClipboard}>
-                  {copied ? 'COPIED' : 'COPY XML'}
-                </button>
-                {xmlOutput}
+            <div className="file-card">
+              <div className="file-card-header">
+                <span className="file-icon">[ ]</span>
+                <span className="file-name">security_audit_task.xml</span>
               </div>
-              {copied && <div className="success-message">XML copied to clipboard! Paste it into your AI assistant.</div>}
-            </>
+              <div className="file-card-actions">
+                <button className="file-btn" onClick={downloadXML}>DOWNLOAD</button>
+                <button className={`file-btn ${copied ? 'copied' : ''}`} onClick={copyToClipboard}>
+                  {copied ? 'COPIED' : 'COPY'}
+                </button>
+              </div>
+              {copied && <div className="file-card-message">Copied to clipboard</div>}
+            </div>
           )}
         </div>
       </main>

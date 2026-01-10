@@ -69,7 +69,7 @@ body {
 
 .subtitle {
   font-size: 1rem;
-  opacity: 0.8;
+  color: #b0b0b0;
   letter-spacing: 1px;
 }
 
@@ -82,7 +82,7 @@ body {
 
 .card-button {
   background: #000000;
-  border: 2px solid #ffffff;
+  border: 1px solid #444;
   border-radius: 0;
   padding: 2rem;
   cursor: pointer;
@@ -95,6 +95,7 @@ body {
 .card-button:hover {
   background: #ffffff;
   color: #000000;
+  border-color: #ffffff;
 }
 
 .card-button:active {
@@ -115,9 +116,12 @@ body {
 
 .card-button p {
   font-size: 0.85rem;
-  color: inherit;
+  color: #b0b0b0;
   line-height: 1.6;
-  opacity: 0.8;
+}
+
+.card-button:hover p {
+  color: #333;
 }
 
 .bug-fix:hover {
@@ -134,8 +138,7 @@ body {
 
 .footer {
   text-align: center;
-  color: #ffffff;
-  opacity: 0.7;
+  color: #999;
 }
 
 .footer p {
@@ -146,7 +149,7 @@ body {
 /* Form styles */
 .form-container {
   background: #000000;
-  border: 2px solid #ffffff;
+  border: 1px solid #444;
   border-radius: 0;
   padding: 2.5rem;
   box-shadow: none;
@@ -167,9 +170,8 @@ body {
 }
 
 .form-header p {
-  color: #ffffff;
+  color: #aaa;
   font-size: 0.85rem;
-  opacity: 0.7;
   letter-spacing: 0.5px;
 }
 
@@ -178,8 +180,8 @@ body {
   align-items: center;
   gap: 0.5rem;
   background: #000000;
-  border: 2px solid #ffffff;
-  color: #ffffff;
+  border: 1px solid #555;
+  color: #aaa;
   padding: 0.75rem 1.25rem;
   border-radius: 0;
   cursor: pointer;
@@ -193,6 +195,7 @@ body {
 .back-button:hover {
   background: #ffffff;
   color: #000000;
+  border-color: #ffffff;
 }
 
 .form-group {
@@ -211,14 +214,19 @@ body {
 .form-group input,
 .form-group textarea {
   width: 100%;
-  padding: 0.75rem;
-  border: 1px solid #ffffff;
+  padding: 0.875rem;
+  border: 1px solid #555;
   border-radius: 0;
   font-size: 0.85rem;
   font-family: 'Courier New', 'Courier', monospace;
   transition: all 0.2s ease;
-  background: #000000;
+  background: #0a0a0a;
   color: #ffffff;
+}
+
+.form-group input::placeholder,
+.form-group textarea::placeholder {
+  color: #666;
 }
 
 .form-group input:focus,
@@ -242,7 +250,7 @@ body {
 .btn {
   flex: 1;
   padding: 1rem;
-  border: 2px solid #ffffff;
+  border: 1px solid #555;
   border-radius: 0;
   font-size: 0.85rem;
   font-weight: 400;
@@ -255,21 +263,23 @@ body {
 .btn-primary {
   background: #ffffff;
   color: #000000;
+  border-color: #ffffff;
 }
 
 .btn-primary:hover {
-  background: #000000;
-  color: #ffffff;
+  background: #ddd;
+  border-color: #ddd;
 }
 
 .btn-secondary {
   background: #000000;
-  color: #ffffff;
+  color: #aaa;
 }
 
 .btn-secondary:hover {
   background: #ffffff;
   color: #000000;
+  border-color: #ffffff;
 }
 
 .xml-output {
@@ -325,6 +335,74 @@ body {
   letter-spacing: 0.5px;
 }
 
+/* File Card - Clean XML Output */
+.file-card {
+  background: #0a0a0a;
+  border: 1px solid #444;
+  margin-top: 2rem;
+  padding: 2rem;
+}
+
+.file-card-header {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-bottom: 1.5rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid #333;
+}
+
+.file-icon {
+  font-family: 'Courier New', 'Courier', monospace;
+  font-size: 1.25rem;
+  color: #888;
+}
+
+.file-name {
+  font-family: 'Courier New', 'Courier', monospace;
+  font-size: 0.95rem;
+  color: #ffffff;
+  letter-spacing: 0.5px;
+  font-weight: 400;
+}
+
+.file-card-actions {
+  display: flex;
+  gap: 0.75rem;
+}
+
+.file-btn {
+  background: transparent;
+  color: #aaa;
+  border: 1px solid #444;
+  padding: 0.75rem 1.75rem;
+  font-family: 'Courier New', 'Courier', monospace;
+  font-size: 0.7rem;
+  letter-spacing: 1.5px;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  text-transform: uppercase;
+}
+
+.file-btn:hover {
+  background: #ffffff;
+  color: #000000;
+  border-color: #ffffff;
+}
+
+.file-btn.copied {
+  background: transparent;
+  color: #ffffff;
+  border-color: #ffffff;
+}
+
+.file-card-message {
+  margin-top: 1.25rem;
+  font-size: 0.75rem;
+  color: #8c8;
+  letter-spacing: 0.5px;
+}
+
 /* Form sections */
 .form-section {
   margin-bottom: 2.5rem;
@@ -337,12 +415,12 @@ body {
 }
 
 .form-section h3 {
-  font-size: 1rem;
+  font-size: 0.9rem;
   font-weight: 400;
-  letter-spacing: 2px;
+  letter-spacing: 2.5px;
   text-transform: uppercase;
   margin-bottom: 1.5rem;
-  color: #888;
+  color: #aaa;
 }
 
 /* Rating buttons */
@@ -355,30 +433,33 @@ body {
 .rating-btn {
   width: 40px;
   height: 40px;
-  background: #000000;
-  border: 1px solid #ffffff;
-  color: #ffffff;
+  background: #0a0a0a;
+  border: 1px solid #555;
+  color: #aaa;
   font-family: 'Courier New', 'Courier', monospace;
   font-size: 1rem;
   cursor: pointer;
-  transition: all 0.2s ease;
+  transition: all 0.15s ease;
 }
 
 .rating-btn:hover {
-  background: #333;
+  border-color: #888;
+  color: #fff;
 }
 
 .rating-btn.active {
   background: #ffffff;
   color: #000000;
+  border-color: #ffffff;
 }
 
 .rating-label {
   display: block;
   font-size: 0.75rem;
-  color: #888;
-  margin-top: 0.25rem;
+  color: #aaa;
+  margin-top: 0.5rem;
   letter-spacing: 0.5px;
+  font-style: italic;
 }
 
 /* Checkbox styling */
@@ -391,14 +472,19 @@ body {
 }
 
 .checkbox-label input[type="checkbox"] {
-  width: 20px;
-  height: 20px;
+  width: 18px;
+  height: 18px;
   appearance: none;
   -webkit-appearance: none;
-  background: #000000;
-  border: 1px solid #ffffff;
+  background: #0a0a0a;
+  border: 1px solid #555;
   cursor: pointer;
   position: relative;
+  transition: all 0.15s ease;
+}
+
+.checkbox-label input[type="checkbox"]:hover {
+  border-color: #888;
 }
 
 .checkbox-label input[type="checkbox"]:checked {
@@ -408,8 +494,8 @@ body {
 .checkbox-label input[type="checkbox"]:checked::after {
   content: '';
   position: absolute;
-  left: 6px;
-  top: 2px;
+  left: 5px;
+  top: 1px;
   width: 5px;
   height: 10px;
   border: solid #000000;
@@ -418,15 +504,15 @@ body {
 }
 
 .checkbox-label span {
-  color: #ffffff;
+  color: #ccc;
 }
 
 /* Advanced toggle button */
 .advanced-toggle {
   width: 100%;
   background: transparent;
-  border: 1px dashed #444;
-  color: #888;
+  border: 1px dashed #555;
+  color: #999;
   padding: 0.75rem 1rem;
   font-family: 'Courier New', 'Courier', monospace;
   font-size: 0.75rem;
@@ -446,8 +532,8 @@ body {
 .advanced-section {
   margin-top: 1rem;
   padding: 1.5rem;
-  border: 1px solid #333;
-  background: #0a0a0a;
+  border: 1px solid #444;
+  background: #080808;
 }
 
 .advanced-section .form-group {
